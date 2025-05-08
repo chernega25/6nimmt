@@ -1,0 +1,26 @@
+# Игнорировать файлы и папки, связанные с Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+*.egg-info/
+*.dist-info/
+
+# Игнорировать Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Для IDE/редакторов
+.vscode/
+.idea/
+
+# Для системных файлов (например, Windows)
+Thumbs.db
+.DS_Store
+
+# Конфигурации git
+*.gitconfig
