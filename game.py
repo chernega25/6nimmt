@@ -8,6 +8,11 @@ class Game:
         self.player_number = player_number
         self.startGame()
 
+    def get_results(self):
+        for _ in self.steps():
+            pass
+        return self.player_points
+
     def steps(self):
         yield
         while min(self.player_points) > 0:
