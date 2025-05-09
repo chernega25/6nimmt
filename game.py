@@ -2,7 +2,7 @@ from board import Board
 from strategies import STRATEGY_CLASS
 
 class Game:
-    def __init__(self, playerCallback, strategies, tactical: bool = False, proffecional: bool = False):
+    def __init__(self, strategies:list[int], playerCallback=None, tactical: bool = False, proffecional: bool = False):
         self.tactical = tactical
         self.proffecional = proffecional
         self.strategies = strategies

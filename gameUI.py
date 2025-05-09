@@ -12,7 +12,7 @@ class GameUI(tk.Frame):
                          width=800, height=400,
                          bd=2, relief="raised", **kwargs)
         
-        self.game = Game(self.playerStrategySync(), strategies)
+        self.game = Game(strategies, self.playerStrategySync())
         self.step = self.game.steps()
         self.command = command
         self.root = master
