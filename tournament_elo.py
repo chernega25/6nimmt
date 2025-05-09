@@ -40,6 +40,6 @@ def compute_elo(strategy_ids, n_rounds, K=32, init_rating=1500):
 
 
 if __name__ == "__main__":
-    strategies = [1, 1, 1, 1, 1]
+    strategies = [1, 1, 3, 3, 3]
     elo = compute_elo(strategies, n_rounds=1000, K=24)
     print(elo)
