@@ -1,5 +1,6 @@
 import tkinter as tk
-from card import Card
+
+from strategies import Card
 
 class CardUI(tk.Frame):
     def __init__(self, master, card: Card, color: str = "white", command=None, **kwargs):

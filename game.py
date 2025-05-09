@@ -1,11 +1,13 @@
 from board import Board
-from strategy import Strategy
+from strategies import STRATEGY_CLASS
 
 class Game:
-    def __init__(self, tactical: bool = False, proffecional: bool = False, player_number: int = 5):
+    def __init__(self, playerCallback, strategies, tactical: bool = False, proffecional: bool = False):
         self.tactical = tactical
         self.proffecional = proffecional
-        self.player_number = player_number
+        self.strategies = strategies
+        self.playerCallback = playerCallback
+        self.player_number = len(strategies)
         self.startGame()
 
     def get_results(self):
@@ -32,7 +34,7 @@ class Game:
 
     def startGame(self):
         self.player_points = [66] * self.player_number
-        self.board = Board()
+        self.board = Board(self.player_number)
 
     def startRound(self):
         self.board.setUpDeck()
@@ -40,9 +42,13 @@ class Game:
         self.board.playersChoice({i: player.chooseRow for i, player in enumerate(self.players)})
 
     def choosePlayers(self):
-        self.players = [Strategy(hand, self.board.board, self.board.queue, self.board.discard, 
-                                 self.tactical, self.proffecional, self.player_number) 
-                        for hand in self.board.player_hands]
+        self.players = [STRATEGY_CLASS[self.strategies[i]]
+                        (hand, self.board.board, self.board.queue, self.board.discard, 
+                         self.tactical, self.proffecional, self.player_number) 
+                         for i, hand in enumerate(self.board.player_hands)]
+        
+        if self.strategies[0] == 0:
+            self.playerCallback()
 
     def playerMove(self):
         moves = [(player.play(), i) 

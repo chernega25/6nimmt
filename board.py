@@ -1,9 +1,9 @@
 import random
 
-from card import Card
+from strategies import Card
 
 class Board:
-    def __init__(self, tactical: bool = False, player_number: int = 5):
+    def __init__(self, player_number: int = 5, tactical: bool = False):
         self.tactical = tactical
         self.player_number = player_number
         self.player_hands = []

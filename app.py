@@ -11,10 +11,10 @@ root.geometry("800x400")
 mainScreen = None
 game = None
 
-def newGame():
+def newGame(strategies):
     mainScreen.destroy()
     global game
-    game = GameUI(root, endGame)
+    game = GameUI(root, strategies, endGame)
     game.pack()
 
 def endGame(scores):

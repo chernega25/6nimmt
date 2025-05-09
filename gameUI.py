@@ -4,16 +4,20 @@ from game import Game
 from boardUI import BoardUI
 from queueUI import QueueUI
 from scoreUI import ScoreUI
+from playerHandUI import PlayerHandUI
 
 class GameUI(tk.Frame):
-    def __init__(self, master, command, **kwargs):
+    def __init__(self, master, strategies, command, **kwargs):
         super().__init__(master,
                          width=800, height=400,
                          bd=2, relief="raised", **kwargs)
         
-        self.game = Game()
+        self.game = Game(self.playerStrategySync(), strategies)
         self.step = self.game.steps()
         self.command = command
+        self.root = master
+        self.player = None
+        self.hand = None
 
         self.configure(bg="white")
         self._create_widgets()
@@ -32,16 +36,15 @@ class GameUI(tk.Frame):
         self.score = ScoreUI(self, self.game.player_points)
         self.score.place(x=720, y=200, anchor="se")
 
-        # self.hand1 = QueueUI(self, self.game.board)
-        # self.hand1.place(x=10, y=10, anchor="nw")
-
-        # self.hand2 = QueueUI(self, self.game.board)
-        # self.hand2.place(x=280, y=10, anchor="nw")
+        if self.player:
+            self.createPlayerHand()
+            self.board.setPlayer(self.player)
 
     def updateGame(self):
         self.board.destroy()
         self.queue.destroy()
         self.score.destroy()
+        if self.hand: self.hand.destroy()
         self._create_widgets()
 
     def nextCommand(self):
@@ -52,3 +55,16 @@ class GameUI(tk.Frame):
             except StopIteration:
                 self.command(self.game.player_points)
         return nextStep
+
+    def playerStrategySync(self):
+        def func():
+            self.player = self.game.players[0]
+            self.player.setRoot(self.root)
+            self.board.setPlayer(self.player)
+            self.createPlayerHand()
+        return func
+    
+    def createPlayerHand(self):
+        self.hand = PlayerHandUI(self, self.player, self.game.board.player_hands[0])
+        self.hand.place(x=10, y=10, anchor="nw")
+
