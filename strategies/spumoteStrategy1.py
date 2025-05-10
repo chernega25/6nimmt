@@ -36,6 +36,8 @@ class SpumoteStrategy1(Strategy):
     def get_probability(self, cnt_all, k, m, n):
         if cnt_all <= k:
             return 0
+        if n <= m:
+            return 0
         res = math.comb(k - 1, m - 1) * math.comb(cnt_all - k, n - m) / math.comb(cnt_all, n - 1)
         return res
    
@@ -46,11 +48,12 @@ class SpumoteStrategy1(Strategy):
 
         intervals = [(0, 5, min([sum(self.board[x]) for x in range(4)]))]
         for i in range(4):
-            intervals.append((self.board[i][-1].number, len(self.board[i]), sum(self.board[i])))
+            intervals.append((self.board[i][-1].number, len(self.board[i]), sum(self.board[i]) + 5 - len(self.board[i])))
         intervals.sort()
+        # print(intervals)
         e = []
         for i, x in enumerate(self.hand_int):
-            for j in range(5):
+            for j in range(4, -1, -1):
                 if x > intervals[j][0]:
                     break
             if j < 4:
@@ -60,6 +63,11 @@ class SpumoteStrategy1(Strategy):
             cnt_all = self.cnt_other_players_card_in_hand()
             k = self.cnt_other_players_card_in_hand(intervals[j][0], x)
             prob = self.get_probability(cnt_all, k + 1, 6 - intervals[j][1], self.player_number)
+
+            # print(f'{x} {j} {intervals[j]} {cnt_all} {cnt} before_us={k}, {prob:.3f} {prob * intervals[j][2]:.3f}')
+
             e.append(prob * intervals[j][2])
+
+
         res = e.index(min(e))
         return res
