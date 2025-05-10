@@ -34,9 +34,9 @@ class SpumoteStrategy1(Strategy):
  
     
     def get_probability(self, cnt_all, k, m, n):
-        if cnt_all <= k:
+        if cnt_all < k:
             return 0
-        if n <= m:
+        if n < m:
             return 0
         res = math.comb(k - 1, m - 1) * math.comb(cnt_all - k, n - m) / math.comb(cnt_all, n - 1)
         return res
