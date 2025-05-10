@@ -11,23 +11,23 @@ class SpumoteStrategy1(Strategy):
 
     def cnt_other_players_card_in_hand(self, l=None, r=None):
         """
-        Считает количество чисел из диапазона [l, r] (r по умолчанию = self.N),
+        Считает количество чисел из диапазона (l, r] (r по умолчанию = self.N),
         которые не встречаются ни в self.hand, ни в self.board, ни в self.discard.
         """
         # Задаём правый конец отрезка
         if l is None:
-            l = 1
+            l = 0
         if r is None:
             r = 104 if not self.tactical else self.player_number * 10 + 4
 
         # Общее количество чисел в отрезке
-        total = max(0, r - l + 1)
+        total = max(0, r - l)
 
         # Собираем все "запрещённые" числа в одно множество
         used = set(self.hand_int) | {card for pile in self.board_int for card in pile} | set(self.discard_int)
 
         # Считаем, сколько из этих запрещённых попадают в [l, r]
-        excluded_in_range = sum(1 for x in used if l <= x <= r)
+        excluded_in_range = sum(1 for x in used if l < x <= r)
 
         # Разность — это те числа, которые остались
         return total - excluded_in_range
@@ -56,15 +56,11 @@ class SpumoteStrategy1(Strategy):
             for j in range(4, -1, -1):
                 if x > intervals[j][0]:
                     break
-            if j < 4:
-                cnt = self.cnt_other_players_card_in_hand(intervals[j][0], intervals[j + 1][0])
-            else:
-                cnt = self.cnt_other_players_card_in_hand(intervals[j][0])
             cnt_all = self.cnt_other_players_card_in_hand()
             k = self.cnt_other_players_card_in_hand(intervals[j][0], x)
             prob = self.get_probability(cnt_all, k + 1, 6 - intervals[j][1], self.player_number)
 
-            # print(f'{x} {j} {intervals[j]} {cnt_all} {cnt} before_us={k}, {prob:.3f} {prob * intervals[j][2]:.3f}')
+            # print(f'{x} {j} {intervals[j]} {cnt_all} before_us={k}, {prob:.3f} {prob * intervals[j][2]:.3f}')
 
             e.append(prob * intervals[j][2])
 
